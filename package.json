@@ -1,0 +1,94 @@
+{
+  "name": "@blcklab/kineox",
+  "version": "0.1.0-rc.2",
+  "description": "Framework-agnostic TypeScript video player and cinematic showcase engine.",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": [
+    "./dist/styles/*.css"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./player": {
+      "types": "./dist/player/index.d.ts",
+      "import": "./dist/player/index.js"
+    },
+    "./styles/player.css": "./dist/styles/player.css",
+    "./showcase": {
+      "types": "./dist/showcase/index.d.ts",
+      "import": "./dist/showcase/index.js"
+    },
+    "./styles/showcase.css": "./dist/styles/showcase.css",
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/theme/index.js"
+    },
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "import": "./dist/ui/index.js"
+    },
+    "./extensions": {
+      "types": "./dist/extensions/index.d.ts",
+      "import": "./dist/extensions/index.js"
+    }
+  },
+  "types": "./dist/core/index.d.ts",
+  "scripts": {
+    "clean": "node ./scripts/clean.mjs",
+    "build": "npm run clean && tsc -p tsconfig.build.json && node scripts/copy-styles.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "node tests/browser-smoke.mjs",
+    "verify:package": "node scripts/verify-package.mjs",
+    "check": "npm run typecheck && npm run build && npm test && npm run verify:package && npm run verify:release",
+    "test:showcase:browser": "python tests/showcase-browser-local.py",
+    "test:player:browser": "python tests/player-browser-local.py",
+    "test:m4:browser": "python tests/m4-browser-local.py",
+    "test:m5:browser": "python tests/m5-browser-local.py",
+    "test:playground:browser": "python tests/playground-check-local.py",
+    "test:presentation:browser": "python tests/presentation-browser-local.py",
+    "test:rc:browser": "python tests/rc-browser-local.py",
+    "test:m5:stress": "node --test tests/m5.test.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "demo": "node scripts/demo-server.mjs",
+    "test:interaction:browser": "python tests/interaction-browser-local.py"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "keywords": [
+    "video",
+    "video-player",
+    "showcase",
+    "cinematic",
+    "typescript",
+    "framework-agnostic",
+    "headless"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blcklab/kineox.git"
+  },
+  "homepage": "https://github.com/blcklab/kineox#readme",
+  "bugs": {
+    "url": "https://github.com/blcklab/kineox/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

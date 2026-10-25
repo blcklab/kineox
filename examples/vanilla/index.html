@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Kineox headless demo</title>
+<video id="demo" width="640" controls playsinline poster=""></video>
+<button id="play" type="button">Play</button>
+<output id="status">idle</output>
+<script type="module">
+  import { createKineox } from '../../dist/core/index.js';
+  const video = document.querySelector('#demo');
+  const controller = createKineox(video, { preload: 'none' });
+  await controller.setSource({ src: '../../tests/assets/short.mp4', type: 'video/mp4' });
+  controller.subscribe(() => {
+    document.querySelector('#status').value = controller.getSnapshot().status;
+  });
+  document.querySelector('#play').addEventListener('click', () => {
+    void controller.play().catch(error => alert(error.message));
+  });
+  window.addEventListener('pagehide', () => controller.destroy(), { once: true });
+</script>
+</html>

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d14">
+  <title>Kineox · Local Playground</title>
+  <link rel="stylesheet" href="../dist/styles/player.css">
+  <link rel="stylesheet" href="../dist/styles/showcase.css">
+  <style>
+    :root { color-scheme: dark; font: 15px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:#090c13; color:#edf1f8; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(ellipse at 50% 0%,#1e2a47 0,transparent 45%),#090c13; min-height:100vh; }
+    a { color:inherit; text-decoration:none; }
+    button, select, input { font:inherit; }
+    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible { outline:2px solid #c4d4ff; outline-offset:3px; }
+    .wrap { max-width:1150px; margin:0 auto; padding:0 24px; }
+    header { border-bottom:1px solid #ffffff19; }
+    header .wrap { display:flex; align-items:center; justify-content:space-between; padding-top:22px; padding-bottom:22px; gap:12px; }
+    .logo { font-weight:800; letter-spacing:.17em; font-size:18px; }
+    .muted { color:#8e9bb4; font-size:12px; }
+    .eyebrow { text-transform:uppercase; letter-spacing:.2em; font-size:11px; color:#9bb1df; font-weight:650; }
+    h1 { font-size:clamp(45px,7vw,86px); line-height:1.02; letter-spacing:-.07em; font-weight:680; margin:19px 0 20px; }
+    h1 span { background:linear-gradient(100deg,#fff,#9db4e5); color:transparent; background-clip:text; }
+    .intro { color:#a5b2c7; font-size:16px; max-width:660px; line-height:1.7; }
+    .hero { padding-top:72px; padding-bottom:45px; }
+    .pill { display:inline-flex; padding:5px 11px; border:1px solid #66739265; border-radius:999px; color:#b9c7e3; font-size:12px; }
+    .bar { border:1px solid #ffffff26; padding:14px 18px; border-radius:14px; background:#ffffff09; display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin:24px 0 24px; }
+    .bar label { color:#c9d4e9; font-size:13px; }
+    .bar input[type=file] { color:#aab9d3; max-width:100%; font-size:12px; }
+    .bar select { background:#172034; color:#eff4ff; border:1px solid #64738d8f; border-radius:7px; padding:7px 11px; }
+    .bar button { color:#eff4ff; background:#28395c; padding:8px 12px; border:1px solid #7292ce70; border-radius:8px; cursor:pointer; }
+    .media-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+    .panel { background:transparent; border:0; border-radius:0; padding:0; min-width:0; }
+    .panel h2 { font-size:17px; margin:0 0 4px; letter-spacing:-.02em; }
+    .panel p { font-size:12px; color:#a6b1c6; margin:0 0 17px; }
+    .preview { width:100%; }
+    .preview .kx-player, .preview .kx-showcase { width:100%; }
+    .links { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; padding-top:38px; padding-bottom:80px; }
+    .link { padding:20px; border:1px solid #ffffff20; border-radius:13px; background:#ffffff08; }
+    .link strong { display:block; margin:0 0 6px; }
+    .link small { color:#9daac0; }
+    .link:hover { border-color:#8096c9; background:#ffffff0e; }
+    .notice { color:#8f9bb1; font-size:12px; padding-top:10px; }
+    @media(max-width:810px){.media-grid{grid-template-columns:1fr}.links{grid-template-columns:1fr}.hero{padding-top:44px}h1{font-size:54px}}
+  </style>
+</head>
+<body>
+<header><div class="wrap"><div class="logo">KINEOX<span style="color:#a5bcff">.</span></div><span class="muted">BLCKLAB · Local Developer Playground</span></div></header>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">M6 / Video experiences</div>
+    <h1>Every frame,<br><span>beautifully presented.</span></h1>
+    <p class="intro">Two experiences. One headless TypeScript engine. Try the complete Player and cinematic Showcase below — or load your own MP4/WebM video without uploading it anywhere.</p>
+    <span class="pill">Framework agnostic</span> <span class="pill">Zero core dependencies</span> <span class="pill">Your file stays local</span>
+  </section>
+  <section aria-label="Preview controls" class="bar">
+    <label>Choose a video <input id="video-file" type="file" accept="video/*"></label>
+    <label>Showcase frame <select id="frame">
+      <option value="browser">Browser</option><option value="device">Device</option><option value="floating">Floating</option><option value="cinematic">Cinematic</option><option value="glass">Glass</option><option value="minimal">Minimal</option><option value="borderless" selected>Borderless</option><option value="none">None (legacy)</option>
+    </select></label>
+    <label>Player appearance <select id="player-appearance"><option value="default">Default</option><option value="minimal">Minimal</option><option value="borderless" selected>Borderless</option></select></label>
+    <label>Video fit <select id="fit"><option value="contain">Contain</option><option value="cover">Cover</option></select></label>
+    <label>Poster click <select id="poster-click"><option value="play" selected>Play inline</option><option value="expand">Expand video</option></select></label>
+    <label>Playback controls <select id="control-mode"><option value="auto" selected>Auto-hide</option><option value="always">Always visible</option></select></label>
+    <button id="theme" type="button">Switch theme</button>
+    <button id="reset" type="button">Reset demo video</button>
+  </section>
+  <section class="media-grid" aria-label="Kineox live samples">
+    <article class="panel"><h2>Player</h2><p>Play, seek, adjust volume, captions, speed and supported display modes.</p><div class="preview" id="player"></div></article>
+    <article class="panel"><h2>Showcase</h2><p>Poster-first presentation. Play inline or expand without replacing the video.</p><div class="preview" id="showcase"></div></article>
+  </section>
+  <div id="file-status" class="notice" role="status">Using the bundled cinematic loop. Load a product video to assess visual quality.</div>
+  <nav class="links" aria-label="Detailed examples">
+    <a class="link" href="./player/"><strong>Full Player demo ↗</strong><small>Dedicated playback controls and subtitles</small></a>
+    <a class="link" href="./showcase/"><strong>Cinematic landing page ↗</strong><small>Showcase and ambient video presentation</small></a>
+    <a class="link" href="./customization.html"><strong>Customize Kineox ↗</strong><small>Themes, color tokens and extension controls</small></a>
+  </nav>
+</main>
+<script type="module">
+import { mountPlayer } from '../dist/player/index.js';
+import { mountShowcase } from '../dist/showcase/index.js';
+
+const fixture = '/examples/media/showcase-loop.mp4';
+const poster = '/examples/showcase/poster.svg';
+let url = fixture;
+let objectUrl = null;
+let dark = true;
+let player, showcase;
+const fileInput = document.querySelector('#video-file');
+const frameInput = document.querySelector('#frame');
+const appearanceInput = document.querySelector('#player-appearance');
+const fitInput = document.querySelector('#fit');
+const clickInput = document.querySelector('#poster-click');
+const controlInput = document.querySelector('#control-mode');
+const status = document.querySelector('#file-status');
+
+function render() {
+  player?.destroy(); showcase?.destroy();
+  player = mountPlayer('#player', {
+    source: {src:url, type:url===fixture?'video/mp4':undefined},
+    poster, title:'Kineox demonstration', theme:dark?'dark':'light', aspectRatio:'16/9',
+    appearance:appearanceInput.value,
+    interaction:{controls:controlInput.value},
+    captions: url===fixture ? [{src:'/examples/player/en.vtt',srclang:'en',label:'English'}] : []
+  });
+  showcase = mountShowcase('#showcase', {
+    source: {src:url, type:url===fixture?'video/mp4':undefined}, poster, title:'Kineox product showcase',
+    theme:dark?'dark':'light', presentation:{frame:frameInput.value,fit:fitInput.value,aspectRatio:'16/9'},
+    preview:{mode:'manual'}, interaction:{posterClick:clickInput.value,controls:controlInput.value},
+    expand:{enabled:true,autoplay:true}
+  });
+}
+render();
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files?.[0]; if (!file) return;
+  const oldUrl = objectUrl;
+  objectUrl = URL.createObjectURL(file);
+  url = objectUrl;
+  render();
+  if (oldUrl) URL.revokeObjectURL(oldUrl);
+  status.textContent = `Playing local file: ${file.name}. Nothing was uploaded.`;
+});
+frameInput.addEventListener('change', render);
+appearanceInput.addEventListener('change', render);
+fitInput.addEventListener('change', render);
+clickInput.addEventListener('change', render);
+controlInput.addEventListener('change', render);
+document.querySelector('#theme').addEventListener('click', () => {
+  dark = !dark;
+  player.setTheme(dark?'dark':'light');
+  showcase.setTheme(dark?'dark':'light');
+});
+document.querySelector('#reset').addEventListener('click', () => {
+  url = fixture; fileInput.value=''; render();
+  if (objectUrl) URL.revokeObjectURL(objectUrl);
+  objectUrl = null;
+  status.textContent='Using the bundled cinematic loop. Load a product video to assess visual quality.';
+});
+window.addEventListener('pagehide', () => {
+  player?.destroy();showcase?.destroy();
+  if (objectUrl) URL.revokeObjectURL(objectUrl);
+},{once:true});
+</script>
+</body>
+</html>

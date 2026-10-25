@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kineox Showcase — cinematic video for the web</title>
+  <link rel="stylesheet" href="../../dist/styles/showcase.css" />
+  <style>
+    :root {color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#090d16;color:#f5f7ff}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(ellipse at 50% 10%,#202b47 0,transparent 60%),#080b12}
+    header{max-width:1160px;margin:0 auto;padding:28px 26px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff16}
+    .brand{font-weight:800;letter-spacing:.20em;font-size:20px}.minor{font-size:11px;font-weight:600;letter-spacing:.16em;color:#a1aac0;text-transform:uppercase}
+    main{max-width:1160px;margin:0 auto;padding:88px 26px 100px}
+    .eyebrow{letter-spacing:.22em;text-transform:uppercase;color:#a6b6d8;font-size:11px;font-weight:650}
+    h1{font-size:clamp(44px,7.3vw,90px);letter-spacing:-.071em;line-height:1.03;font-weight:650;max-width:850px;margin:24px 0}
+    .gradient{background:linear-gradient(110deg,#edf2ff,#8299c6);background-clip:text;-webkit-text-fill-color:transparent}
+    .lead{font-size:clamp(15px,1.8vw,19px);color:#acb4c7;line-height:1.65;max-width:600px;margin-bottom:40px}
+    .tag{display:inline-flex;padding:9px 12px;background:#ffffff0e;border:1px solid #ffffff26;border-radius:999px;color:#b9c6dc;font-size:12px;margin:0 8px 8px 0}
+    .demo{width:100%;max-width:960px;margin:40px auto 0}
+    .footnote{color:#7e8aa2;font-size:13px;text-align:center;margin-top:16px}
+    .columns{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:118px;align-items:center}
+    h2{font-size:34px;letter-spacing:-.05em;font-weight:650;margin:0 0 14px}.copy{color:#a0abc0;line-height:1.75}
+    .example{border:1px solid #ffffff1c;background:#101623;border-radius:20px;padding:22px}
+    .example .label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#899bb8;margin-bottom:18px}
+    @media(max-width:680px){main{padding:65px 16px}.columns{grid-template-columns:1fr;gap:16px;margin-top:70px}header{padding:20px 16px}h1{font-size:46px}}
+  </style>
+</head>
+<body>
+  <header><span class="brand">KINEOX<span style="color:#9fb4ec">.</span></span><span class="minor">BLCKLAB / 0.1 alpha</span></header>
+  <main>
+    <div class="eyebrow">Cinematic presentation engine</div>
+    <h1>Make your product<br/><span class="gradient">impossible to ignore.</span></h1>
+    <p class="lead">Video playback meets editorial presentation. One modular, framework-agnostic TypeScript engine — from beautiful landing-page demos to the full player.</p>
+    <span class="tag">Poster first</span><span class="tag">Same video on expansion</span><span class="tag">Zero core dependencies</span>
+    <div class="demo" id="showcase-demo"></div>
+    <p class="footnote">Click the video to explore the expanded Kineox experience. The bundled demo is a short cinematic loop; try a recording of your own product.</p>
+    <div class="columns">
+      <div>
+        <div class="eyebrow">Ambient experience</div>
+        <h2>Motion that stays in the background.</h2>
+        <p class="copy">Muted, looping viewport previews with no default controls. When people prefer reduced motion, Kineox preserves the poster instead.</p>
+      </div>
+      <div class="example"><div class="label">Viewport-aware ambient example</div><div id="ambient-demo"></div></div>
+    </div>
+  </main>
+  <script type="module">
+    import { mountShowcase } from '../../dist/showcase/index.js';
+    const fixture = '../media/showcase-loop.mp4';
+    const showcase = mountShowcase('#showcase-demo', {
+      source: { src: fixture, type: 'video/mp4' }, poster: './poster.svg', title: 'Kineox cinematic demo',
+      presentation: { frame: 'borderless', aspectRatio: '16/9', radius: 'lg' },
+      preview: { mode: 'manual' }, expand: { autoplay: true }
+    });
+    const ambient = mountShowcase('#ambient-demo', {
+      mode: 'ambient', source: { src: fixture, type: 'video/mp4' }, poster: './poster.svg',
+      presentation: { aspectRatio: '16/9', radius: 'md' }
+    });
+    window.addEventListener('pagehide', () => { showcase.destroy(); ambient.destroy(); }, {once:true});
+  </script>
+</body>
+</html>

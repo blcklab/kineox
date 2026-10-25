@@ -1,0 +1,22 @@
+# Packages and generated output
+node_modules/
+dist/
+coverage/
+*.tgz
+
+# Maintainer-only plans, milestone history and release notes
+.internal/
+
+# Local system/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Generated browser screenshots
+/player-*-preview.png
+/showcase-*-preview.png
+/showcase-landing-*.png
+/m4-customization-preview.png
+/playground-*-preview.png
+/presentation-presets-*.png

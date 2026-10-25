@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kineox Player — M2 demo</title>
+  <link rel="stylesheet" href="../../dist/styles/player.css" />
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 48px 22px 90px; background: #0c1018; color: #f2f5fb;
+      font: 15px/1.5 system-ui, -apple-system, sans-serif; }
+    main { max-width: 1050px; margin: auto; }
+    header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+    header strong { font-size:18px; letter-spacing:.26em; }
+    header span { color:#8e98ab; font-size:13px; }
+    h1 { font-size:clamp(26px,4vw,44px); letter-spacing:-.05em; margin:65px 0 8px; }
+    p { color:#96a0b1; margin:0 0 25px; max-width:650px; }
+    #demo { border:1px solid #2d3545; border-radius:20px; overflow:hidden; box-shadow:0 40px 120px rgba(0,0,0,.4); }
+    footer { display:flex; gap:16px; align-items:center; padding:20px 0; flex-wrap:wrap; }
+    footer button { padding:10px 18px; cursor:pointer; border:1px solid #313949; border-radius:10px; color:#eaf0fa; background:#202733; }
+    code { font-size:13px; color:#c5d0e2; }
+  </style>
+</head>
+<body>
+<main>
+  <header><strong>KINEOX<span style="color:#8290aa"> / PLAYER</span></strong><span>M2 · 0.1.0 alpha</span></header>
+  <h1>Playback, without the noise.</h1>
+  <p>Framework-free video controls with accessible interactions, native caption tracks, and a reusable headless engine. Demo media is a small local test video.</p>
+  <div id="demo"></div>
+  <footer>
+    <button type="button" id="theme">Toggle theme</button>
+    <button type="button" id="source">Replay from start</button>
+    <span id="state" aria-live="polite"></span>
+  </footer>
+  <p><code>import { mountPlayer } from '@blcklab/kineox/player'</code></p>
+</main>
+<script type="module">
+  import { mountPlayer } from '../../dist/player/index.js';
+  const player = mountPlayer('#demo', {
+    source: { src: '/examples/media/showcase-loop.mp4', type: 'video/mp4' },
+    title: 'Kineox sample playback', appearance: 'borderless',
+    captions: [
+      { src: '/examples/player/en.vtt', srclang: 'en', label: 'English', kind: 'subtitles' },
+      { src: '/examples/player/es.vtt', srclang: 'es', label: 'Español', kind: 'subtitles' }
+    ]
+  });
+  window.player = player;
+  window.kineoxDemoReady = true;
+  document.querySelector('#theme').onclick = () => {
+    player.element.dataset.kxTheme = player.element.dataset.kxTheme === 'light' ? 'dark' : 'light';
+  };
+  document.querySelector('#source').onclick = () => {
+    player.controller.seek(0);
+    void player.controller.play();
+  };
+  player.controller.subscribe(() => {
+    const s = player.controller.getSnapshot();
+    document.querySelector('#state').textContent = `${s.status} · ${s.currentTime.toFixed(1)}s`;
+  });
+</script>
+</body>
+</html>

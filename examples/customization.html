@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kineox · Customizable by design</title>
+  <link rel="stylesheet" href="../dist/styles/player.css" />
+  <link rel="stylesheet" href="../dist/styles/showcase.css" />
+  <style>
+    :root { color-scheme:dark;font-family:system-ui, sans-serif; background:#0b0e17; color:#f5f6fb; }
+    *{box-sizing:border-box} body{margin:0; background:radial-gradient(ellipse at 52% -5%, #293249, transparent 62%),#0b0e17}
+    main{max-width:1040px;margin:0 auto;padding:32px 22px 90px}header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff21;padding-bottom:25px}
+    .brand{font-size:23px;letter-spacing:.19em;font-weight:750}.small{font-size:12px;color:#9ca5b8;letter-spacing:.13em;text-transform:uppercase}
+    h1{font-size:clamp(38px,7vw,74px);letter-spacing:-.06em;line-height:1.02;margin:76px 0 20px}
+    p{color:#a5aec3;max-width:650px;line-height:1.75}.toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:17px 0 24px}
+    button.preset{cursor:pointer;background:#161c2a;border:1px solid #ffffff25;padding:10px 17px;color:#dbe2ef;border-radius:10px;font:inherit}
+    button.preset:hover,button.preset[aria-pressed="true"]{background:#2a3348;border-color:#c3cfeb}
+    section{margin-top:65px}.label{font-size:12px;font-weight:600;letter-spacing:.2em;color:#8897b5;text-transform:uppercase;margin-bottom:14px}
+    .frame{max-width:920px}.custom-play{border:1px solid #fff5;color:#fff;cursor:pointer;border-radius:8px;background:#fff2;padding:5px 9px}
+    .watermark{position:absolute;top:55px;left:15px;padding:6px 9px;background:#0a0d17b8;border-radius:6px;color:#fff;z-index:5;letter-spacing:.1em;font-size:11px}
+    footer{margin-top:80px;color:#737e95;font-size:13px}
+  </style>
+</head>
+<body><main>
+  <header><div class="brand">KINEOX<span style="color:#95c7b0">.</span></div><div class="small">BLCKLAB / CUSTOMIZATION</div></header>
+  <h1>Make video<br/>feel like <span style="color:#a7f3d0">your product.</span></h1>
+  <p>Framework-agnostic, composable and aesthetic. Customize the Player and Showcase using semantic tokens and independent UI extensions.</p>
+  <section><div class="label">01 — A player you can extend</div>
+    <div class="toolbar"><button id="dark" class="preset" aria-pressed="true">Dark</button><button id="light" class="preset">Light</button><button id="minimal" class="preset">Minimal</button><button id="accent" class="preset">Change accent</button></div>
+    <div id="player-demo" class="frame"></div>
+  </section>
+  <section><div class="label">02 — Your own cinematic display</div><div id="showcase-demo" class="frame"></div></section>
+  <footer>Sample media is a short cinematic loop. Replace it with your own videos and poster artwork.</footer>
+</main>
+<script type="module">
+ import {mountPlayer} from '../dist/player/index.js';
+ import {mountShowcase} from '../dist/showcase/index.js';
+ const clip = './media/showcase-loop.mp4';
+ const p=mountPlayer('#player-demo',{ source:{src:clip,type:'video/mp4'}, title:'Kineox demo',theme:'dark',themeTokens:{accent:'#a7f3d0'},
+ extensions:[{id:'my-custom-control',mount({append,controller,element}){
+   const b=element.ownerDocument.createElement('button');b.type='button';b.className='custom-play';b.textContent='Replay';
+   b.setAttribute('aria-label','Replay video');const click=()=>{controller.seek(0);void controller.play()};
+   b.addEventListener('click',click);append('toolbar-end',b);return ()=>b.removeEventListener('click',click);
+ }}] });
+ const s=mountShowcase('#showcase-demo',{source:{src:clip,type:'video/mp4'}, poster:'./showcase/poster.svg', themeTokens:{focusRing:'#a7f3d0'},
+  presentation:{frame:'minimal',aspectRatio:'16/9'},preview:{mode:'manual'},expand:{autoplay:true},
+  extensions:[{id:'watermark',mount({append,element}){const label=element.ownerDocument.createElement('span');label.className='watermark';label.textContent='KINEOX / DEMO';append('overlay',label);}}] });
+ for(const name of ['dark','light','minimal']) document.querySelector('#'+name).addEventListener('click',()=>{
+   p.setTheme(name);
+   for(const el of document.querySelectorAll('button.preset[id="dark"],button.preset[id="light"],button.preset[id="minimal"]'))el.setAttribute('aria-pressed',String(el.id===name));
+ });
+ let mint=true;document.querySelector('#accent').addEventListener('click',()=>{mint=!mint;p.setThemeTokens({accent:mint?'#a7f3d0':'#faac6b'});});
+ window.addEventListener('pagehide',()=>{p.destroy();s.destroy()},{once:true});
+</script></body></html>

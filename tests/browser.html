@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Kineox M1 browser smoke</title>
+<main id="result">RUNNING</main>
+<script type="module">
+import { createKineox } from '/dist/core/index.js';
+const show = (kind, detail) => { document.querySelector('#result').textContent = `${kind} | ${detail}`; };
+async function main() {
+  const el = document.createElement('video');
+  el.preload = 'auto';
+  el.muted = true;
+  el.playsInline = true;
+  document.body.append(el);
+  const core = createKineox(el);
+  const current = core.getSnapshot();
+  if (current.status !== 'idle') throw new Error('Expected initial idle state');
+  await core.setSource({ src: '/tests/assets/short.mp4', type: 'video/mp4' });
+  await new Promise((resolve, reject) => {
+    if (el.readyState >= 2) { resolve(); return; }
+    const timer = setTimeout(() => reject(new Error('Media did not become ready')), 5000);
+    el.addEventListener('loadeddata', () => { clearTimeout(timer); resolve(); }, { once: true });
+    el.addEventListener('error', () => reject(new Error(`Native error ${el.error?.code}`)), { once: true });
+  });
+  if (core.getSnapshot().duration === null) throw new Error('Missing finite duration');
+  await core.play();
+  if (core.getSnapshot().status !== 'playing') throw new Error(`Not playing: ${core.getSnapshot().status}`);
+  core.pause();
+  if (!core.getSnapshot().paused) throw new Error('Not paused');
+  const src = el.getAttribute('src');
+  core.destroy();
+  if (src !== el.getAttribute('src') || !el.isConnected) throw new Error('Destroyed borrowed element');
+  const recreated = createKineox(el);
+  recreated.destroy();
+  show('PASS', `duration ${el.duration}, source ${src}`);
+}
+main().catch(e => show('FAIL', e.stack || String(e)));
+</script>
+</html>
